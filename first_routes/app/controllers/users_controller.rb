@@ -1,6 +1,15 @@
 class UsersController < ApplicationController
     def index
-        render json: User.all
+        if params[:username]
+            if User.exists?(['username ilike ?', params[:username]])
+                users = User.where("users.username ILIKE '#{params[:username]}'")
+            else
+                users = User.all
+            end
+        else
+            users = User.all
+        end
+        render json: users
     end
 
     def create
@@ -29,6 +38,16 @@ class UsersController < ApplicationController
         user = User.find(params[:id])
         user.destroy
         redirect_to :users
+    end
+
+    def favorited_artworks
+        art_user_fav = Artwork.favorites(params[:id])
+        art_share_fav = ArtworkShare.favorites(params[:id])
+        render json: [art_user_fav,art_share_fav]
+    end
+
+    def collections
+        render json: Collection.collections(params[:id])
     end
 
     private

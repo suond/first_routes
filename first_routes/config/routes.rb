@@ -16,5 +16,29 @@ Rails.application.routes.draw do
     resources :users do
       resources :artworks, only: [:index]
     end
+
+    resources :comments, only: [:create, :destroy, :index] 
+
+    resources :users do
+      member do
+        get 'favorited_artworks'
+      end
+    end
+
+    resources :users do
+      member do
+        get 'collections'
+      end
+    end
+
+    # resources :users do
+    #   resources :comments, only: [:create, :destroy, :index]
+    # end
+    # resources :artworks do
+    #   resources :comments, only: [:create, :destroy, :index]
+    # end
+
+    # get '/:user_id/comments', to: 'comments#index'
+    # get '/:artwork_id/comments', to: 'comments#index'
 end
 
